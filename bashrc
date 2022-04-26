@@ -40,7 +40,7 @@ function acct_info() {
         current_dom_tmp=$(echo -e "${dominfo}" | sed -n '3'p | awk '{print $1}')
         current_dom=$(echo -e "\e[92m$current_dom_tmp\e[0m")
     elif [[ "$condition" == 'FALSE' ]]; then
-        current_dom="No domains assigned to this folder"
+        current_dom="Not a domain doc root"
     fi
 
     tput sc
