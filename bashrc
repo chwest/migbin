@@ -27,4 +27,43 @@ function mig() {
 if [[ ! $(echo $PATH | grep migbin) ]]; then
     PATH=$PATH:~/bin/migbin
 fi
+
+function acct_info() {
+    echo
+    columns=$(tput cols)
+    dominfo=$(echo -e "$(domaininfo)")
+    dom_table=$(echo -e "${dominfo}" | tail -n +3)
+    num_domains=$(echo -e "${dominfo}" | tail -n +3 | wc -l)
+    condition=$(echo -e "${dominfo}" | head -n 1)
+
+    if [[ "$condition" == 'TRUE' ]]; then
+        current_dom_tmp=$(echo -e "${dominfo}" | sed -n '3'p | awk '{print $1}')
+        current_dom=$(echo -e "\e[92m$current_dom_tmp\e[0m")
+    elif [[ "$condition" == 'FALSE' ]]; then
+        current_dom="No domains assigned to this folder"
+    fi
+
+    tput sc
+    line1=$(echo -e "${dominfo}" | sed -n "2"p)
+    printf "%*s" $columns "DOMAINS: [ ${line1} ]"
+
+    i=3
+    for info in $(seq 1 "$num_domains"); do
+        line=$(echo -e "${dominfo}" | sed -n "$i"p)
+        printf "%*s" $columns "[ ${line} ]"
+        ((i++))
+    done
+
+    tput rc
+
+    echo -e "USER:$(whoami)\nIPV4:$(curl -s ifconfig.me)\nDOMAINS:$num_domains\nCURRENT:$current_dom" | column -t -s ':'
+
+    for i in $(seq 4 "$num_domains"); do
+        echo -e ' '
+    done
+}
+
 cat ~/bin/migbin/migbin
+
+alias info_on="PROMPT_COMMAND='acct_info'"
+alias info_off="PROMPT_COMMAND=''"
