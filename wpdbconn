@@ -5,66 +5,76 @@ function wpdbconn() {
 
         timestamp=$(date +%s)
         wpdbcreds=$(php -w wp-config.php | sed -rn s'/\;/\;\n/gp' | grep -oP 'define.+DB_(NAME|USER|PASSWORD|HOST).+\;$')
-        wpdbname=$(php -r "${wpdbcreds} echo DB_NAME;")
-        wpdbuser=$(php -r "${wpdbcreds} echo DB_USER;")
-        wpdbpass=$(php -r "${wpdbcreds} echo DB_PASSWORD;")
-        wpdbhost=$(php -r "${wpdbcreds} echo DB_HOST;")
 
-        if [[ "${wpdbhost}" == *':'* ]]; then
+        wpdbconn=()
+        wpdbconn[0]=$(php -r "${wpdbcreds} echo DB_NAME;")
+        wpdbconn[1]=$(php -r "${wpdbcreds} echo DB_USER;")
+        wpdbconn[2]=$(php -r "${wpdbcreds} echo DB_PASSWORD;")
+        wpdbconn[3]=$(php -r "${wpdbcreds} echo DB_HOST;")
+        
+        if [[ -z "${wpdbconn[2]}" ]]; then 
+            wpdbconn=()
+            wpdbconn[0]=$(awk '/DB_NAME/ {print $3}' wp-config.php | grep -oP "(.)\K.+(?=\1)")
+            wpdbconn[1]=$(awk '/DB_USER/ {print $3}' wp-config.php | grep -oP "(.)\K.+(?=\1)")
+            wpdbconn[2]=$(awk '/DB_PASSWORD/ {print $3}' wp-config.php | grep -oP "(.)\K.+(?=\1)")
+            wpdbconn[3]=$(awk '/DB_HOST/ {print $3}' wp-config.php | grep -oP "(.)\K.+(?=\1)")
+        fi
+        
 
-            wpdbhost=$(echo "${wpdbhost}" | cut -d ':' -f 1)
-            wpdbport=$(echo "${wpdbhost}" | cut -d ':' -f 2)
+        if [[ "${wpdbconn[3]}" == *':'* ]]; then
+
+            wpdbconn[3]=$(echo "${wpdbconn[3]}" | cut -d ':' -f 1)
+            wpdbconn[4]=$(echo "${wpdbconn[3]}" | cut -d ':' -f 2)
 
         else
-            wpdbhost="$wpdbhost"
-            wpdbport='3306'
+
+            wpdbconn[3]="${wpdbconn[3]}"
+            wpdbconn[4]='3306'
 
         fi
 
-        if [[ -z "${wpdbname}" || -z "${wpdbuser}" || -z "${wpdbpass}" || -z "${wpdbhost}" ]]; then
+        if [[ -z "${wpdbconn[0]}" || -z "${wpdbconn[1]}" || -z "${wpdbconn[2]}" || -z "${wpdbconn[3]}" ]]; then
 
-            echo -e "Could not set one or more variable, here is what was found:\nwpdbname: ${wpdbname}\nwpdbuser: ${wpdbuser}\nwpdbpass: ${wpdbpass}\nwpdbhost: ${wpdbhost}\nwpdbport: ${wpdbport}"
+            echo -e "Could not set one or more variable, here is what was found:\nwpdbname: ${wpdbconn[0]}\nwpdbuser: ${wpdbconn[1]}\nwpdbpass: ${wpdbconn[2]}\nwpdbhost: ${wpdbconn[3]}\nwpdbport: ${wpdbconn[4]}"
 
         fi
-
-        wpdbconn=( $(echo "$wpdbname" "$wpdbuser" "$wpdbpass" "$wpdbhost" "$wpdbport") )
 
         if [[ "$1" == '-l' ]]; then
 
-            echo -e "wpdbname: ${wpdbname}\nwpdbuser: ${wpdbuser}\nwpdbpass: ${wpdbpass}\nwpdbhost: ${wpdbhost}\nwpdbport: ${wpdbport}"
+            echo -e "wpdbname: ${wpdbconn[0]}\nwpdbuser: ${wpdbconn[1]}\nwpdbpass: ${wpdbconn[2]}\nwpdbhost: ${wpdbconn[3]}\nwpdbport: ${wpdbconn[4]}"
 
         elif [[ "$1" == '-d' ]]; then
 
-            mysqldump "$wpdbname" -u "$wpdbuser" -p"$wpdbpass" -h "$wpdbhost" --port="$wpdbport" > "${wpdbname}"_"$timestamp".sql
+            mysqldump "${wpdbconn[0]}" -u "${wpdbconn[1]}" -p"${wpdbconn[2]}" -h "${wpdbconn[3]}" --port="${wpdbconn[4]}" > "${wpdbconn[0]}"_"$timestamp".sql
 
         elif [[ "$1" == '-q' ]]; then
 
-            mysql -sN "$wpdbname" -u "$wpdbuser" -p"$wpdbpass" -h "$wpdbhost" --port="$wpdbport" 2>/dev/null
+            mysql -sN "${wpdbconn[0]}" -u "${wpdbconn[1]}" -p"${wpdbconn[2]}" -h "${wpdbconn[3]}" --port="${wpdbconn[4]}" 2>/dev/null
 
         elif [[ "$1" == '-qd' || "$1" == '-dq' ]]; then
 
-            mysqldump "$wpdbname" -u "$wpdbuser" -p"$wpdbpass" -h "$wpdbhost" --port="$wpdbport" 2>/dev/null > "${wpdbname}"_"$timestamp".sql
+            mysqldump "${wpdbconn[0]}" -u "${wpdbconn[1]}" -p"${wpdbconn[2]}" -h "${wpdbconn[3]}" --port="${wpdbconn[4]}" 2>/dev/null > "${wpdbconn[0]}"_"$timestamp".sql
 
         elif [[ "$1" == '-c' ]]; then
 
-            mysql "$wpdbname" -u "$wpdbuser" -p"$wpdbpass" -h "$wpdbhost" --port="$wpdbport"
+            mysql "${wpdbconn[0]}" -u "${wpdbconn[1]}" -p"${wpdbconn[2]}" -h "${wpdbconn[3]}" --port="${wpdbconn[4]}"
 
         elif [[ "$1" == '-dt' ]]; then
 
-            table_array=( $(mysql -sN "$wpdbname" -u "$wpdbuser" -p"$wpdbpass" -h "$wpdbhost" --port="$wpdbport" 2>/dev/null <<<"show tables;") )
+            table_array=( $(mysql -sN "${wpdbconn[0]}" -u "${wpdbconn[1]}" -p"${wpdbconn[2]}" -h "${wpdbconn[3]}" --port="${wpdbconn[4]}" 2>/dev/null <<<"show tables;") )
             
             for table in ${table_array[@]}; 
             do
                 
                 mkdir ./db_"${timestamp}"/ 2>/dev/null
-                dumpfile="./db_${timestamp}/${wpdbname}_${table}.sql"
-                mysqldump -u "$wpdbuser" -p"$wpdbpass" -h "$wpdbhost" --port="$wpdbport" "$wpdbname" "$table" 2>/dev/null > "${dumpfile}"
+                dumpfile="./db_${timestamp}/${wpdbconn[0]}_${table}.sql"
+                mysqldump -u "${wpdbconn[1]}" -p"${wpdbconn[2]}" -h "${wpdbconn[3]}" --port="${wpdbconn[4]}" "${wpdbconn[0]}" "$table" 2>/dev/null > "${dumpfile}"
                 
                 if [[ -s "${dumpfile}" ]]
                 then 
-                    echo "Dumped table ${wpdbname}_${table} successfully."
+                    echo "Dumped table ${wpdbconn[0]}_${table} successfully."
                 else 
-                    echo "Did not dump table ${wpdbname}_${table}"
+                    echo "Did not dump table ${wpdbconn[0]}_${table}"
                 fi 
 
             done  
@@ -81,14 +91,14 @@ function wpdbconn() {
 
         if [[ "$1" == '-qd' || "$1" == '-dq' || "$1" == '-d' ]]; then
 
-            if [[ -s "${wpdbname}"_"$timestamp.sql" ]]; then
+            if [[ -s "${wpdbconn[0]}"_"$timestamp.sql" ]]; then
 
-                echo "Success: dumped to ${wpdbname}_$timestamp.sql"
+                echo "Success: dumped to ${wpdbconn[0]}_$timestamp.sql"
 
             else
 
-                echo -e "\nFailed to dump db $wpdbname. The following credentials were used: "
-                echo -e "wpdbname: ${wpdbname}\nwpdbuser: ${wpdbuser}\nwpdbpass: ${wpdbpass}\nwpdbhost: ${wpdbhost}\nwpdbport: ${wpdbport}"
+                echo -e "\nFailed to dump db ${wpdbconn[0]}. The following credentials were used: "
+                echo -e "wpdbname: ${wpdbconn[0]}\nwpdbuser: ${wpdbconn[1]}\nwpdbpass: ${wpdbconn[2]}\nwpdbhost: ${wpdbconn[3]}\nwpdbport: ${wpdbconn[4]}"
 
             fi
 
