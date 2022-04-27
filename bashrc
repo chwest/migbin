@@ -72,7 +72,7 @@ OR='\e[38;5;214m' # orange
 charct=$(echo $main_domain | wc -c)
 mdcol=$(expr $charct + 4)
 columns=$(expr "$COLUMNS" - "$mdcol" - 1)
-bar=$( echo; echo -en "\r${BLB}┌"; for i in $(seq 1 $columns); do echo -en "─"; done )
+bar=$( echo -n; echo -en "\r${BLB}┌"; for i in $(seq 1 $columns); do echo -en "─"; done )
 
 # get ipv4 address
 IP=$(curl -s ifconfig.me)
