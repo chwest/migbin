@@ -80,4 +80,4 @@ IP=$(curl -s ifconfig.me)
 # PROMPT_COMMAND=''
 
 # print PS1
-PS1="$(echo -en "$bar")[ ${DB}${main_domain} ${BLB}]\n[${DB} \u ${WT}${IP} ${BLB}] [ ${BLB}$? ${BLB}] [ ${GR}\j ${BLB}] [ ${WT}\w ${BLB}] ${RST}:> "
+PS1="$(echo -en "$bar")[ ${DB}${main_domain} ${BLB}]\n[${DB} \u ${WT}${IP} ${BLB}] [ ${BLB}$? ${BLB}] [ ${GR}\j ${BLB}] [ ${WT}\w/ ${BLB}] ${RST}:> "
