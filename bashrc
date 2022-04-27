@@ -75,6 +75,7 @@ columns=$(expr "$COLUMNS" - "$dtcol" - 1)
 bar=$(
     echo -en "${OR}┌"
     for i in $(seq 1 $columns); do echo -en "─"; done
+    echo -en "[ "
 )
 
 # get ipv4 address
@@ -94,7 +95,7 @@ function free_mem() {
     else
         WRN=${BYW}
     fi
-    mem=$(echo -en "${WRN}${mUS}${BLB}/${BDB}${mTH} ${BLB}M")
+    mem=$(echo -en "${WRN}${mUS}${BLB}/${BDB}${mTH} ${BLB}M ${OR}]")
     echo -en "$mem"
 }
 
