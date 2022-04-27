@@ -37,7 +37,7 @@ for data in domains_json:
 
 for domain in domains:
     dindex = domains.index(domain)
-    if pwd in paths[dindex]:
+    if paths[dindex] == pwd:
         domain_string = "{} {} {} {} (current)".format(domains[dindex], paths[dindex], types[dindex], phpver[dindex])
     else:
         domain_string = "{} {} {} {}".format(domains[dindex], paths[dindex], types[dindex], phpver[dindex])
