@@ -21,8 +21,8 @@ function mkcd() {
     cd "${@: -1}"
 }
 function mig() {
-	mkdir -p ~/migration/{files,dbs}
-	cd ~/migration/files
+        mkdir -p ~/migration/{files,dbs}
+        cd ~/migration/files
 }
 if [[ ! $(echo $PATH | grep migbin) ]]; then
     PATH=$PATH:~/bin/migbin
@@ -75,7 +75,6 @@ columns=$(expr "$COLUMNS" - "$dtcol" - 1)
 bar=$(
     echo -en "${OR}┌"
     for i in $(seq 1 $columns); do echo -en "─"; done
-    echo -en "[ "
 )
 
 # get ipv4 address
@@ -95,7 +94,7 @@ function free_mem() {
     else
         WRN=${BYW}
     fi
-    mem=$(echo -en "${WRN}${mUS}${BLB}/${BDB}${mTH} ${BLB}M ${OR}]")
+    mem=$(echo -en "${WRN}${mUS}${BLB}/${BDB}${mTH} ${BLB}M")
     echo -en "$mem"
 }
 
@@ -108,4 +107,4 @@ function show_time() {
 # PROMPT_COMMAND=''
 
 # print PS1
-PS1="$(echo -en "$bar")\$(free_mem)\n${OR}└[${DB} \u${WT}@${DB}${IP} ${OR}] [ ${DB}${main_domain} ${OR}] ${OR}[ ${GR}\j ${OR}] [ ${WT}\w ${OR}] ${RST}:> "
+PS1="$(echo -en "$bar")[ ${DB}${main_domain} ${OR}]\n└[${DB} \u${WT}@${DB}${IP} ${OR}] [ \$(free_mem) ${OR}] ${OR}[ ${GR}\j ${OR}] [ ${WT}\w ${OR}] ${RST}:> "
