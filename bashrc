@@ -72,10 +72,7 @@ OR='\e[38;5;214m' # orange
 dtcharct=$(date | wc -c)
 dtcol=$(expr $dtcharct + 4)
 columns=$(expr "$COLUMNS" - "$dtcol" - 1)
-bar=$(
-    echo -en "${OR}┌"
-    for i in $(seq 1 $columns); do echo -en "─"; done
-)
+bar=$( for i in $(seq 1 $columns); do echo -en "─"; done )
 
 # get ipv4 address
 IP=$(curl -s ifconfig.me)
