@@ -72,7 +72,7 @@ OR='\e[38;5;214m' # orange
 charct=$(echo $main_domain | wc -c)
 mdcol=$(expr $charct + 4)
 columns=$(expr "$COLUMNS" - "$mdcol" - 1)
-bar=$( for i in $(seq 1 $columns); do echo -en "─"; done )
+bar=$( echo -en "${BLB}┌"; for i in $(seq 1 $columns); do echo -en "─"; done )
 
 # get ipv4 address
 IP=$(curl -s ifconfig.me)
@@ -80,4 +80,4 @@ IP=$(curl -s ifconfig.me)
 # PROMPT_COMMAND=''
 
 # print PS1
-PS1="$(echo -en "${BLB}$bar")[ ${DB}${main_domain} ${BLB}]\n└[${DB} \u ${WT}${IP} ${BLB}] [ ${BLB}$? ${BLB}] [ ${GR}\j ${BLB}] [ ${WT}\w ${BLB}] ${RST}:> "
+PS1="$(echo -en "$bar")[ ${DB}${main_domain} ${BLB}]\n└[${DB} \u ${WT}${IP} ${BLB}] [ ${BLB}$? ${BLB}] [ ${GR}\j ${BLB}] [ ${WT}\w ${BLB}] ${RST}:> "
