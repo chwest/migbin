@@ -69,37 +69,13 @@ BGWT='\e[47m'  # background white
 OR='\e[38;5;214m' # orange
 
 # declate sizes for top bar
-dtcharct=$(date | wc -c)
-dtcol=$(expr $dtcharct + 4)
-columns=$(expr "$COLUMNS" - "$dtcol" - 1)
+charct=$(echo $main_domain | wc -c)
+mdcol=$(expr $charct + 4)
+columns=$(expr "$COLUMNS" - "$mdcol" - 1)
 bar=$( for i in $(seq 1 $columns); do echo -en "─"; done )
 
 # get ipv4 address
 IP=$(curl -s ifconfig.me)
-
-# functions for memory and date printing
-function free_mem() {
-    mTo=$(awk '/MemTotal/{print $2}' /proc/meminfo)
-    mFr=$(awk '/MemFree/{print $2}' /proc/meminfo)
-    mTH=$(expr $mTo / 1024)
-    mFH=$(expr $mFr / 1024)
-    mUS=$(expr $mTH - $mFH)
-    if [[ "$mUS" -ge '7000' ]]; then
-        WRN=${BRD}
-    elif [[ "$mUS" -lt '5000' ]]; then
-        WRN=${BGR}
-    else
-        WRN=${BYW}
-    fi
-    mem=$(echo -en "${WRN}${mUS}${BLB}/${BDB}${mTH} ${BLB}M")
-    echo -en "$mem"
-}
-
-function show_time() {
-    dtfmt=$( echo -e '['"${RST} $(date) ${OR}"']'"${RST}" )
-    printf "%*s" $dtcol "$dtfmt"
-}
-
 # optional prompt command
 # PROMPT_COMMAND=''
 
