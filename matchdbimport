@@ -1,6 +1,6 @@
 #!/bin/bash
 function matchdbimport() {
-    dbname=$(wp config get DB_NAME)
+    dbname=$(wpdbconn -l | grep -oP 'wpdbname: \K.+')
     sqlresults=$(ls ~/migration/dbs/$dbname* | wc -w)
     if [[ $(echo $sqlresults) == 1 ]]; then
         sqlfile=$(ls ~/migration/dbs/$dbname*)

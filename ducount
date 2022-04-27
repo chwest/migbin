@@ -1,33 +1,24 @@
 #!/bin/bash
-function dutest() {
-  width=$( ls -A1 | while read i ; do length=$( expr $( echo "$i" | wc -c ) \+ 34 ); echo $length ; done | sort -n -r | head -n 1 )
-  width1=$( ls -A1 | while read i ; do length=$( expr $( echo "$i" | wc -c ) \+ 2 ) ; echo $length ; done | sort -n -r | head -n 1 )
-  # echo -n ' ┌'
-  # for item in $( seq 1 "$width" ); do echo -n '─'; done 
-  # echo -ne '┐\n'
+function ducount() {
+  width1=$(ls -A1 | while read i; do
+    length=$(expr $(echo "$i" | wc -c) \+ 2)
+    echo $length
+  done | sort -n -r | head -n 1)
   format="%-${width1}s %-9s %-9s %-9s\n"
-  header=$( printf "$format" "FILENAME" " DU" " FILES" " DIRS" )
+  header=$(printf "$format" "FILENAME" " DU" " FILES" " DIRS")
   echo "$header"
-  # echo ' │ '"$header"' │'
-  # echo -n ' ├'
-  # for item in $( seq 1 "$width" ); do echo -n '─'; done 
-  # echo -ne '┤\n'
-  find ./ -maxdepth 1 -exec du -sh {} \; | tail -n +2 | sort -r -h | while read x
-    do
-      base_item=$( echo "$x" | grep -oP '\d+([G|M|K])?\s+\.\/\K.+' )
-      type=$( stat -c%F "$base_item" ) ; size=$( echo "$x" | awk '{print $1}' )
-      filecount=$( find ./"$base_item" -type f 2>/dev/null | wc -l )
-      if [[ $type == 'directory' ]]; then 
-        num_dirs=$( find ./"$base_item" -maxdepth 1 -exec stat -c%F {} \; | tail -n +2 | grep directory | wc -l )
-      else 
-        num_dirs='0'
-      fi 
-      line=$( printf "$format" "$base_item  " " $size" " $filecount" " $num_dirs" )
-      echo "$line"
-      # echo ' │ '"$line"' │'
-    done
-    # echo -n ' └'
-    # for item in $( seq 1 "$width" ); do echo -n '─'; done
-    # echo -ne '┘\n'
+  find ./ -maxdepth 1 -exec du -sh {} \; | tail -n +2 | sort -r -h | while read x; do
+    base_item=$(echo "$x" | grep -oP '\d+([G|M|K])?\s+\.\/\K.+')
+    type=$(stat -c%F "$base_item")
+    size=$(echo "$x" | awk '{print $1}')
+    filecount=$(find ./"$base_item" -type f 2>/dev/null | wc -l)
+    if [[ $type == 'directory' ]]; then
+      num_dirs=$(find ./"$base_item" -maxdepth 1 -exec stat -c%F {} \; | tail -n +2 | grep directory | wc -l)
+    else
+      num_dirs='0'
+    fi
+    line=$(printf "$format" "$base_item  " " $size" " $filecount" " $num_dirs")
+    echo "$line"
+  done
 }
-dutest
+ducount
