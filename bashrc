@@ -107,4 +107,4 @@ function show_time() {
 # PROMPT_COMMAND=''
 
 # print PS1
-PS1="$(echo -en "$bar")\$(show_time)\n${OR}└[${DB} \u${WT}@${DB}${IP} ${OR}] [ echo -e "${DB}${main_domain}" ${OR}] [ \$(free_mem) ${OR}] [ ${GR}\j ${OR}] [ ${WT}\w ${OR}] ${RST}:> "
+PS1="$(echo -en "$bar")\$(free_mem)\n${OR}└[${DB} \u${WT}@${DB}${IP} ${OR}] [ ${DB}${main_domain} ${OR}] ${OR}[ ${GR}\j ${OR}] [ ${WT}\w ${OR}] ${RST}:> "
