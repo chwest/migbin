@@ -28,42 +28,83 @@ if [[ ! $(echo $PATH | grep migbin) ]]; then
     PATH=$PATH:~/bin/migbin
 fi
 
-function acct_info() {
-    echo
-    columns=$(tput cols)
-    dominfo=$(echo -e "$(domaininfo)")
-    dom_table=$(echo -e "${dominfo}" | tail -n +3)
-    num_domains=$(echo -e "${dominfo}" | tail -n +3 | wc -l)
-    condition=$(echo -e "${dominfo}" | head -n 1)
-
-    if [[ "$condition" == 'TRUE' ]]; then
-        current_dom_tmp=$(echo -e "${dominfo}" | sed -n '3'p | awk '{print $1}')
-        current_dom=$(echo -e "\e[92m$current_dom_tmp\e[0m")
-    elif [[ "$condition" == 'FALSE' ]]; then
-        current_dom="Not a domain doc root"
-    fi
-
-    tput sc
-    line1=$(echo -e "${dominfo}" | sed -n "2"p)
-    printf "%*s" $columns "DOMAINS: [ ${line1} ]"
-
-    i=3
-    for info in $(seq 1 "$num_domains"); do
-        line=$(echo -e "${dominfo}" | sed -n "$i"p)
-        printf "%*s" $columns "[ ${line} ]"
-        ((i++))
-    done
-
-    tput rc
-
-    echo -e "USER:$(whoami)\nIPV4:$(curl -s ifconfig.me)\nDOMAINS:$num_domains\nCURRENT:$current_dom" | column -t -s ':'
-
-    for i in $(seq 4 "$num_domains"); do
-        echo -e ' '
-    done
-}
-
 cat ~/bin/migbin/migbin
 
-alias info_on="PROMPT_COMMAND='acct_info'"
-alias info_off="PROMPT_COMMAND=''"
+# COLORS
+
+RST='\e[0m' # default
+
+BLK='\e[30m'    # black
+BBLK='\e[1;30m' # bold black
+BGBLK='\e[40m'  # background black
+
+RD='\e[31m'    # red
+BRD='\e[1;31m' # bold red
+BGRD='\e[41m'  # background red
+
+GR='\e[32m'    # green
+BGR='\e[1;32m' # bold green
+BGGR='\e[42m'  # background green
+
+YW='\e[33m'    # yellow
+BYW='\e[1;33m' # bold yellow
+BGYW='\e[43m'  # background yellow
+
+DB='\e[34m'    # dark blue
+BDB='\e[1;34m' # bold dark blue
+BGDB='\e[44m'  # background dark blue
+
+PR='\e[35m'    # purple
+BPR='\e[1;35m' # bold purple
+BGPR='\e[m'    # background purple
+
+LB='\e[36m'    # light blue
+BLB='\e[1;36m' # bold light blue
+BGLB='\e[46m'  # background light blue
+
+WT='\e[37m'    # white
+BWT='\e[1;37m' # bold white
+BGWT='\e[47m'  # background white
+
+OR='\e[38;5;214m' # orange
+
+# declate sizes for top bar
+dtcharct=$(date | wc -c)
+dtcol=$(expr $dtcharct + 4)
+columns=$(expr "$COLUMNS" - "$dtcol" - 1)
+bar=$(
+    echo -en "${OR}┌"
+    for i in $(seq 1 $columns); do echo -en "─"; done
+)
+
+# get ipv4 address
+IP=$(curl -s ifconfig.me)
+
+# functions for memory and date printing
+function free_mem() {
+    mTo=$(awk '/MemTotal/{print $2}' /proc/meminfo)
+    mFr=$(awk '/MemFree/{print $2}' /proc/meminfo)
+    mTH=$(expr $mTo / 1024)
+    mFH=$(expr $mFr / 1024)
+    mUS=$(expr $mTH - $mFH)
+    if [[ "$mUS" -ge '7000' ]]; then
+        WRN=${BRD}
+    elif [[ "$mUS" -lt '5000' ]]; then
+        WRN=${BGR}
+    else
+        WRN=${BYW}
+    fi
+    mem=$(echo -en "${WRN}${mUS}${BLB}/${BDB}${mTH} ${BLB}M")
+    echo -en "$mem"
+}
+
+function show_time() {
+    dtfmt=$( echo -e '['"${RST} $(date) ${OR}"']'"${RST}" )
+    printf "%*s" $dtcol "$dtfmt"
+}
+
+# optional prompt command
+# PROMPT_COMMAND=''
+
+# print PS1
+PS1="$(echo -en "$bar")\$(show_time)\n${OR}└[${DB} \u${WT}@${DB}${IP} ${OR}] [ echo -e "${DB}${main_domain}" ${OR}] [ \$(free_mem) ${OR}] [ ${GR}\j ${OR}] [ ${WT}\w ${OR}] ${RST}:> "
