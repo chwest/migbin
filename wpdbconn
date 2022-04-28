@@ -12,7 +12,7 @@ function wpdbconn() {
         wpdbconn[2]=$(php -r "${wpdbcreds} echo DB_PASSWORD;")
         wpdbconn[3]=$(php -r "${wpdbcreds} echo DB_HOST;")
         
-        if [[ -z "${wpdbconn[2]}" ]]; then 
+        if [[ -z "${wpdbconn[0]}" || -z "${wpdbconn[1]}" || -z "${wpdbconn[2]}" || -z "${wpdbconn[3]}" ]]; then
             wpdbconn=()
             wpdbconn[0]=$(awk '/DB_NAME/ {print $3}' wp-config.php | grep -oP "(.)\K.+(?=\1)")
             wpdbconn[1]=$(awk '/DB_USER/ {print $3}' wp-config.php | grep -oP "(.)\K.+(?=\1)")
