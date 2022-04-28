@@ -9,7 +9,7 @@ domains_json = json.loads(raw_json)['result']['data']
 
 home_call = os.popen("echo $HOME")
 home = home_call.read().rstrip("\n")
-pub_h = "{}/public_html".format(home)
+pub_h = "{0}/public_html".format(home)
 
 default_php_call = os.popen("uapi LangPHP php_get_system_default_version --output=jsonpretty format=list | python -mjson.tool")
 php_json = default_php_call.read()
@@ -40,7 +40,7 @@ for data in domains_json:
 for domain in domains:
     dindex = domains.index(domain)
     if paths[dindex] == pwd:
-        domain_string = "{} {}/ {} {} (current)".format(domains[dindex], paths[dindex], types[dindex], phpver[dindex])
+        domain_string = "{0} {1}/ {2} {3} (current)".format(domains[dindex], paths[dindex], types[dindex], phpver[dindex])
     else:
-        domain_string = "{} {}/ {} {}".format(domains[dindex], paths[dindex], types[dindex], phpver[dindex])
+        domain_string = "{0} {1}/ {2} {3}".format(domains[dindex], paths[dindex], types[dindex], phpver[dindex])
     print(domain_string)
