@@ -68,10 +68,14 @@ BGWT='\e[47m'  # background white
 
 OR='\e[38;5;214m' # orange
 
+num_addon=$( $(which python) ~/bin/migbin/dinfo.py | awk '/addon_domain/ {print $0}' | wc -l )
+num_subdomains=$( $(which python) ~/bin/migbin/dinfo.py | awk '/sub_domain/ {print $0}' | wc -l )
+num_parked=$( $(which python) ~/bin/migbin/dinfo.py | awk '/parked_domain/ {print $0}' | wc -l )
+
 # declate sizes for top bar
-charct=$(echo $main_domain | wc -c)
-mdcol=$(expr $charct + 4)
-columns=$(expr "$COLUMNS" - "$mdcol" - 1)
+charct=$(echo "[ main: $main_domain ]─[ addon_domains: $num_addon ]─[ sub_domains: $num_subdomains ]─[ parked_domains: $num_parked ]" | wc -c)
+domstring=$(echo -e "${BLB}[ main: ${GR}$main_domain ${BLB}]─[ addon_domains: ${WT}$num_addon ${BLB}]─[ sub_domains: ${WT}$num_subdomains ${BLB}]─[ parked_domains: ${WT}$num_parked ${BLB}]")
+columns=$(expr "$COLUMNS" - "$charct" - 1)
 bar=$( echo -n; echo -en "\r${BLB}┌"; for i in $(seq 1 $columns); do echo -en "─"; done )
 
 # get ipv4 address
@@ -81,4 +85,4 @@ IP=$(curl -s ifconfig.me)
 
 source ~/bin/migbin/bash_aliases
 # print PS1
-PS1="$(echo -en "$bar")[ ${DB}${main_domain} ${BLB}]\n[${DB} \u ${WT}${IP} ${BLB}] [ ${BLB}$? ${BLB}] [ ${GR}\j ${BLB}] [ ${WT}\w/ ${BLB}] ${RST}:> "
+PS1="$(echo -e "${bar}${domstring}")\n[${DB} \u ${WT}${IP} ${BLB}] [ ${BLB}$? ${BLB}] [ ${GR}\j ${BLB}] [ ${WT}\w/ ${BLB}] ${RST}:> "
