@@ -85,4 +85,4 @@ IP=$(curl -s ifconfig.me)
 
 source ~/bin/migbin/bash_aliases
 # print PS1
-PS1="$(echo -e "${bar}${domstring}")\n[${DB} \u ${WT}${IP} ${BLB}] [ ${BLB}$? ${BLB}] [ ${GR}\j ${BLB}] [ ${WT}\w/ ${BLB}] ${RST}:> "
+PS1="$(echo -e "${bar}${domstring}")\n[${DB} \u ${WT}${IP} ${BLB}] [ ${BLB}$? ${BLB}] [ ${GR}\j ${BLB}] [ ${GR}\w/ ${BLB}] ${RST}:> "
