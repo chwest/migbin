@@ -7,6 +7,14 @@ uapi_call = os.popen("uapi DomainInfo domains_data --output=jsonpretty format=li
 raw_json = uapi_call.read()
 domains_json = json.loads(raw_json)['result']['data']
 
+home_call = os.popen("echo $HOME")
+home = home_call.read().rstrip("\n")
+pub_h = "{}/public_html".format(home)
+
+default_php_call = os.popen("uapi LangPHP php_get_system_default_version --output=jsonpretty format=list | python -mjson.tool")
+php_json = default_php_call.read()
+default_php = json.loads(php_json)['result']['data']['version']
+
 pwd_call = os.popen("pwd")
 pwd = pwd_call.read().rstrip("\n")
 
@@ -15,21 +23,16 @@ paths = []
 types = []
 phpver = []
 
-for data in domains_json:
-    if data['type'] == 'main_domain':
-        general_php = data['phpversion']
-        main_path = data['documentroot']
-
 for data in domains_json:    
     if "documentroot" in data:
         paths.append(data['documentroot'])
     else:
-        paths.append(main_path)
+        paths.append(pub_h)
 
     if "phpversion" in data:
         phpver.append(data['phpversion'])
     else:
-        phpver.append(general_php)
+        phpver.append(default_php)
     
     domains.append(data['domain'])
     types.append(data['type'])
