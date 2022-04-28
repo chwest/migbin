@@ -21,9 +21,6 @@ for data in domains_json:
         main_path = data['documentroot']
 
 for data in domains_json:    
-    domains.append(data['domain'])
-    types.append(data['type'])
-
     if "documentroot" in data:
         paths.append(data['documentroot'])
     else:
@@ -33,7 +30,9 @@ for data in domains_json:
         phpver.append(data['phpversion'])
     else:
         phpver.append(general_php)
-
+    
+    domains.append(data['domain'])
+    types.append(data['type'])
 
 for domain in domains:
     dindex = domains.index(domain)
