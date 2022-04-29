@@ -1,7 +1,7 @@
 # Declare variables
 main_domain=$(uapi DomainInfo list_domains 2>/dev/null | awk '$1 ~ "main_domain:" {print $2}')
 newestphpversion=$(ls -1 /usr/local/bin/ea-php7* | tail -n 1 | tr -d @)
-
+shopt -s checkwinsize
 # ALIASES
 alias dumpdb='wpdbconn -dq'
 alias dinfo='$(which python) ~/bin/migbin/dinfo.py | column -t'
@@ -61,4 +61,4 @@ function verbose_prompt() {
 # prompt command
 PROMPT_COMMAND='verbose_prompt'
 # print PS1
-PS1="\033[1;34m\][\033[34m\] \u \033[37m\]$(curl -s ifconfig.me) \033[1;34m\]] [ \033[36m\]jobs: \033[32m\]\j \033[1;34m\]] [ \033[32m\]\w/ \033[1;34m\]] \033[0m\]:> "
+PS1="\033[1;34m\][ \033[34m\]\u \033[37m\]$(curl -s ifconfig.me) \033[1;34m\]] [ \033[36m\]jobs: \033[32m\]\j \033[1;34m\]] [ \033[32m\]\w/ \033[1;34m\]] \033[0m\]:> "
