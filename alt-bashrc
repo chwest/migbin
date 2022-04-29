@@ -49,7 +49,6 @@ domstring=$(echo -e "[ \033[37m$(hostname) \033[1;34m]─[ \033[37mm: \033[32m$m
 # declate sizes for top bar
 function verbose_prompt() {
     columns=$(expr "$(tput cols)" - "$charct" - 9)
-    shopt -s checkwinsize
     bar=$(
         echo -n
         echo -en "\r\033[1;34m┌"
@@ -61,4 +60,6 @@ function verbose_prompt() {
 # prompt command
 PROMPT_COMMAND='verbose_prompt'
 # print PS1
-PS1="\033[1;34m\][ \033[34m\]\u \033[37m\]$(curl -s ifconfig.me) \033[1;34m\]] [ \033[36m\]jobs: \033[32m\]\j \033[1;34m\]] [ \033[32m\]\w/ \033[1;34m\]] \033[0m\]:> "
+prompt="\033[1;34m\][ \033[34m\]\u \033[37m\]$(curl -s ifconfig.me) \033[1;34m\]] [ \033[36m\]jobs: \033[32m\]\j \033[1;34m\]] [ \033[32m\]\w/ \033[1;34m\]] \033[0m\]:> "
+
+PS1="$prompt"
