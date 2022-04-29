@@ -81,7 +81,7 @@ num_subdomains=$( $(which python) ~/bin/migbin/dinfo.py | awk '/sub_domain/ {pri
 num_parked=$( $(which python) ~/bin/migbin/dinfo.py | awk '/parked_domain/ {print $0}' | wc -l )
 
 # declate sizes for top bar
-charct=$(echo "[ ${IP} ]─[ main: $main_domain ]─[ addon_domains: $num_addon ]─[ sub_domains: $num_subdomains ]─[ parked_domains: $num_parked ]" | wc -c)
+charct=$(echo "[ $IP ]─[ main: $main_domain ]─[ addon_domains: $num_addon ]─[ sub_domains: $num_subdomains ]─[ parked_domains: $num_parked ]" | wc -c)
 domstring=$(echo -e "[ ${DB}${IP} ${BLB}]─[ main: ${GR}$main_domain ${BLB}]─[ addon_domains: ${WT}$num_addon ${BLB}]─[ sub_domains: ${WT}$num_subdomains ${BLB}]─[ parked_domains: ${WT}$num_parked ${BLB}]")
 columns=$(expr "$COLUMNS" - "$charct" - 1)
 bar=$( echo -n; echo -en "\r${BLB}┌"; for i in $(seq 1 $columns); do echo -en "─"; done )
