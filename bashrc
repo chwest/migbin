@@ -9,7 +9,7 @@ UNBLINK="\e[25m"
 BLUESH="\e[44m"
 SETSH="\e[49m"
 PS1='\[\e[92m\]\u@${main_domain}\[\e[31m\] \[\e[35m\]\w\[\e[0m\] [$?] \$ '
-
+PROMPT_COMMAND=''
 # ALIASES
 alias wp="$newestphpversion ~/bin/migbin/wp"
 alias gopub="cd ~/public_html"
