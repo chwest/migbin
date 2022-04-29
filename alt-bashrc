@@ -44,14 +44,14 @@ num_addon=$($(which python) ~/bin/migbin/dinfo.py | awk '/addon_domain/ {print $
 num_subdomains=$($(which python) ~/bin/migbin/dinfo.py | awk '/sub_domain/ {print $0}' | wc -l)
 num_parked=$($(which python) ~/bin/migbin/dinfo.py | awk '/parked_domain/ {print $0}' | wc -l)
 charct=$(echo "[ $(hostname) ]─[ m: $main_domain ]─[ a: $num_addon ]─[ s: $num_subdomains ]─[ p: $num_parked ]" | wc -c)
-domstring=$(echo -e "[ ${WT}$(hostname) ${BDB}]─[ ${WT}m: ${GR}$main_domain ${BDB}]─[ ${WT}a: $num_addon ${BDB}]─[ ${WT}s: $num_subdomains ${BDB}]─[ ${WT}p: $num_parked ${BDB}]")
+domstring=$(echo -e "[ \033[37m$(hostname) \033[1;34m]─[ \033[37mm: \033[32m$main_domain \033[1;34m]─[ \033[37ma: $num_addon \033[1;34m]─[ \033[37ms: $num_subdomains \033[1;34m]─[ \033[37mp: $num_parked \033[1;34m]")
 
 # declate sizes for top bar
 function verbose_prompt() {
     columns=$(expr "$(tput cols)" - "$charct" - 9)
     bar=$(
         echo -n
-        echo -en "\r${BDB}┌"
+        echo -en "\r\033[1;34m┌"
         for i in $(seq 1 $columns); do echo -en "─"; done
     )
     echo -e "${bar}${domstring}"
@@ -60,4 +60,4 @@ function verbose_prompt() {
 # prompt command
 PROMPT_COMMAND='verbose_prompt'
 # print PS1
-PS1="${BDB}\][${DB}\] \u ${WT}\]${IP} ${BDB}\]] [ ${LB}\]jobs: ${GR}\]\j ${BDB}\]] [ ${GR}\]\w/ ${BDB}\]] ${RST}\]:> "
+PS1="\033[1;34m\][\033[34m\] \u \033[37m\]${IP} \033[1;34m\]] [ \033[36m\]jobs: \033[32m\]\j \033[1;34m\]] [ \033[32m\]\w/ \033[1;34m\]] \033[0m\]:> "
