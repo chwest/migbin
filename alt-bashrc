@@ -49,6 +49,7 @@ domstring=$(echo -e "[ \033[37m$(hostname) \033[1;34m]─[ \033[37mm: \033[32m$m
 # declate sizes for top bar
 function verbose_prompt() {
     columns=$(expr "$(tput cols)" - "$charct" - 9)
+    shopt -s checkwinsize
     bar=$(
         echo -n
         echo -en "\r\033[1;34m┌"
