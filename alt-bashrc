@@ -10,32 +10,32 @@ alias addondomains='dinfo | awk "/addon_domain/"'
 alias subdomains='dinfo | awk "/sub_domain/"'
 alias parkeddomains='dinfo | awk "/parked_domain/"'
 # COLORS
-RST='\033[0m\]' # default
-BLK='\033[30m\]'    # black
-BBLK='\033[1;30m\]' # bold black
-BGBLK='\033[40m\]'  # background black
-RD='\033[31m\]'    # red
-BRD='\033[1;31m\]' # bold red
-BGRD='\033[41m\]'  # background red
-GR='\033[32m\]'    # green
-BGR='\033[1;32m\]' # bold green
-BGGR='\033[42m\]'  # background green
-YW='\033[33m\]'    # yellow
-BYW='\033[1;33m\]' # bold yellow
-BGYW='\033[43m\]'  # background yellow
-DB='\033[34m\]'    # dark blue
-BDB='\033[1;34m\]' # bold dark blue
-BGDB='\033[44m\]'  # background dark blue
-PR='\033[35m\]'    # purple
-BPR='\033[1;35m\]' # bold purple
-BGPR='\033[m\]'    # background purple
-LB='\033[36m\]'    # light blue
-BLB='\033[1;36m\]' # bold light blue
-BGLB='\033[46m\]'  # background light blue
-WT='\033[37m\]'    # white
-BWT='\033[1;37m\]' # bold white
-BGWT='\033[47m\]'  # background white
-OR='\033[38;5;214m\]' # orange
+RST='\033[0m' # default
+BLK='\033[30m'    # black
+BBLK='\033[1;30m' # bold black
+BGBLK='\033[40m'  # background black
+RD='\033[31m'    # red
+BRD='\033[1;31m' # bold red
+BGRD='\033[41m'  # background red
+GR='\033[32m'    # green
+BGR='\033[1;32m' # bold green
+BGGR='\033[42m'  # background green
+YW='\033[33m'    # yellow
+BYW='\033[1;33m' # bold yellow
+BGYW='\033[43m'  # background yellow
+DB='\033[34m'    # dark blue
+BDB='\033[1;34m' # bold dark blue
+BGDB='\033[44m'  # background dark blue
+PR='\033[35m'    # purple
+BPR='\033[1;35m' # bold purple
+BGPR='\033[m'    # background purple
+LB='\033[36m'    # light blue
+BLB='\033[1;36m' # bold light blue
+BGLB='\033[46m'  # background light blue
+WT='\033[37m'    # white
+BWT='\033[1;37m' # bold white
+BGWT='\033[47m'  # background white
+OR='\033[38;5;214m' # orange
 
 # get ipv4 address
 IP=$(curl -s ifconfig.me)
@@ -60,4 +60,4 @@ function verbose_prompt() {
 # prompt command
 PROMPT_COMMAND='verbose_prompt'
 # print PS1
-PS1="${BDB}[${DB} \u ${WT}${IP} ${BDB}] [ ${LB}jobs: ${GR}\j ${BDB}] [ ${GR}\w/ ${BDB}] ${RST}:> "
+PS1="${BDB}\][${DB}\] \u ${WT}\]${IP} ${BDB}\]] [ ${LB}\]jobs: ${GR}\]\j ${BDB}\]] [ ${GR}\]\w/ ${BDB}\]] ${RST}\]:> "
