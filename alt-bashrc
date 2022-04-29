@@ -5,8 +5,9 @@ newestphpversion=$(ls -1 /usr/local/bin/ea-php7* | tail -n 1 | tr -d @)
 # ALIASES
 alias dumpdb='wpdbconn -dq'
 alias dinfo='$(which python) ~/bin/migbin/dinfo.py | column -t'
-alias addons='dinfo | awk "/addon_domain/"'
-alias subs='dinfo | awk "/sub_domain/"'
+alias addondomains='dinfo | awk "/addon_domain/"'
+alias subdomains='dinfo | awk "/sub_domain/"'
+alias parkeddomains='dinfo | awk "/parked_domain/"'
 
 # COLORS
 RST='\e[0m' # default
