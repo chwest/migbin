@@ -1,5 +1,0 @@
-alias dumpdb='wpdbconn -dq'
-alias dinfo='$(which python) ~/bin/migbin/dinfo.py | column -t'
-alias addons='dinfo | awk "/addon_domain/"'
-alias subs='dinfo | awk "/sub_domain/"'
-alias parked='dinfo | awk "/parked_domain/"'
