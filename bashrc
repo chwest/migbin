@@ -91,4 +91,4 @@ bar=$( echo -n; echo -en "\r${BLB}┌"; for i in $(seq 1 $columns); do echo -en 
 
 source ~/bin/migbin/bash_aliases
 # print PS1
-PS1="$(echo -e "${bar}${domstring}")\n[${DB} \u ${WT}\H ${BLB}] [ ${BLB}$? ${BLB}] [ ${GR}\j ${BLB}] [ ${GR}\w/ ${BLB}] ${RST}:> "
+PS1="$(echo -e "${bar}${domstring}")\n[${DB} \u ${WT}\H ${BLB}] [ ${BLB}$? ${BLB}] [ ${LB}jobs: ${GR}\j ${BLB}] [ ${GR}\w/ ${BLB}] ${RST}:> "
