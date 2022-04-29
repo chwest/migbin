@@ -40,14 +40,15 @@ OR='\e[38;5;214m' # orange
 # get ipv4 address
 IP=$(curl -s ifconfig.me)
 
+num_addon=$($(which python) ~/bin/migbin/dinfo.py | awk '/addon_domain/ {print $0}' | wc -l)
+num_subdomains=$($(which python) ~/bin/migbin/dinfo.py | awk '/sub_domain/ {print $0}' | wc -l)
+num_parked=$($(which python) ~/bin/migbin/dinfo.py | awk '/parked_domain/ {print $0}' | wc -l)
+charct=$(echo "[ $(hostname) ]─[ m: $main_domain ]─[ a: $num_addon ]─[ s: $num_subdomains ]─[ p: $num_parked ]" | wc -c)
+domstring=$(echo -e "[ ${WT}$(hostname) ${BDB}]─[ ${WT}m: ${GR}$main_domain ${BDB}]─[ ${WT}a: $num_addon ${BDB}]─[ ${WT}s: $num_subdomains ${BDB}]─[ ${WT}p: $num_parked ${BDB}]")
+
 # declate sizes for top bar
 function verbose_prompt() {
-    num_addon=$($(which python) ~/bin/migbin/dinfo.py | awk '/addon_domain/ {print $0}' | wc -l)
-    num_subdomains=$($(which python) ~/bin/migbin/dinfo.py | awk '/sub_domain/ {print $0}' | wc -l)
-    num_parked=$($(which python) ~/bin/migbin/dinfo.py | awk '/parked_domain/ {print $0}' | wc -l)
-    charct=$(echo "[ $(hostname) ]─[ m: $main_domain ]─[ a: $num_addon ]─[ s: $num_subdomains ]─[ p: $num_parked ]" | wc -c)
-    domstring=$(echo -e "[ ${WT}$(hostname) ${BDB}]─[ ${WT}m: ${GR}$main_domain ${BDB}]─[ ${WT}a: $num_addon ${BDB}]─[ ${WT}s: $num_subdomains ${BDB}]─[ ${WT}p: $num_parked ${BDB}]")
-    columns=$(expr "$COLUMNS" - "$charct" - 9)
+    columns=$(expr "$(tput cols)" - "$charct" - 9)
     bar=$(
         echo -n
         echo -en "\r${BDB}┌"
