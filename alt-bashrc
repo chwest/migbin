@@ -60,6 +60,6 @@ function verbose_prompt() {
 # prompt command
 PROMPT_COMMAND='verbose_prompt'
 # print PS1
-prompt="\033[1;34m[ \033[34m\u \033[37m$(curl -s ifconfig.me) \033[1;34m] [ \033[36mjobs: \033[32m\j \033[1;34m] [ \033[32m\w/ \033[1;34m] \033[0m\]:> "
+prompt=$(echo -e '\033[1;34m[ \033[34m\u \033[37m'"$(curl -s ifconfig.me)"' \033[1;34m] [ \033[36mjobs: \033[32m\j \033[1;34m] [ \033[32m\w/\033[1;34m\] ]')
 
-PS1="${prompt}"
+PS1="${prompt} :> "
