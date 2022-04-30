@@ -16,7 +16,7 @@ IP=$(curl -s ifconfig.me)
 num_addons=$($(which python) ~/bin/migbin/dinfo.py | awk '/addon_domain/ {print $0}' | wc -l)
 num_subdomains=$($(which python) ~/bin/migbin/dinfo.py | awk '/sub_domain/ {print $0}' | wc -l)
 num_parked=$($(which python) ~/bin/migbin/dinfo.py | awk '/parked_domain/ {print $0}' | wc -l)
-charct=$(echo "[ $(hostname) ]─[ m: $main_domain ]─[ a: $num_addon ]─[ s: $num_subdomains ]─[ p: $num_parked ]" | wc -m)
+charct=$(echo "[ $(hostname) ]─[ m: $main_domain ]─[ a: $num_addon ]─[ s: $num_subdomains ]─[ p: $num_parked ]" | wc -c)
 domstring="\[\033[01;34m\][ \[\033[37m\]$(hostname) \[\033[01;34m\]]─[ \[\033[37m\]m: \[\033[32m\]$main_domain \[\033[01;34m\]]─[ \[\033[37m\]a: $num_addons \[\033[01;34m\]]─[ \[\033[37m\]s: $num_subdomains \[\033[01;34m\]]─[ \[\033[37m\]p: $num_parked \[\033[01;34m\]]"
 
 # declate sizes for top bar
