@@ -9,33 +9,6 @@ alias getdomains='$(which python) ~/bin/migbin/dinfo.py | column -t'
 alias addondomains='dinfo | awk "/addon_domain/"'
 alias subdomains='dinfo | awk "/sub_domain/"'
 alias parkeddomains='dinfo | awk "/parked_domain/"'
-# COLORS
-RST='\033[0m' # default
-BLK='\033[30m'    # black
-BBLK='\033[1;30m' # bold black
-BGBLK='\033[40m'  # background black
-RD='\033[31m'    # red
-BRD='\033[1;31m' # bold red
-BGRD='\033[41m'  # background red
-GR='\033[32m'    # green
-BGR='\033[1;32m' # bold green
-BGGR='\033[42m'  # background green
-YW='\033[33m'    # yellow
-BYW='\033[1;33m' # bold yellow
-BGYW='\033[43m'  # background yellow
-DB='\033[34m'    # dark blue
-BDB='\033[1;34m' # bold dark blue
-BGDB='\033[44m'  # background dark blue
-PR='\033[35m'    # purple
-BPR='\033[1;35m' # bold purple
-BGPR='\033[m'    # background purple
-LB='\033[36m'    # light blue
-BLB='\033[1;36m' # bold light blue
-BGLB='\033[46m'  # background light blue
-WT='\033[37m'    # white
-BWT='\033[1;37m' # bold white
-BGWT='\033[47m'  # background white
-OR='\033[38;5;214m' # orange
 
 # get ipv4 address
 IP=$(curl -s ifconfig.me)
@@ -44,22 +17,16 @@ num_addon=$($(which python) ~/bin/migbin/dinfo.py | awk '/addon_domain/ {print $
 num_subdomains=$($(which python) ~/bin/migbin/dinfo.py | awk '/sub_domain/ {print $0}' | wc -l)
 num_parked=$($(which python) ~/bin/migbin/dinfo.py | awk '/parked_domain/ {print $0}' | wc -l)
 charct=$(echo "[ $(hostname) ]─[ m: $main_domain ]─[ a: $num_addon ]─[ s: $num_subdomains ]─[ p: $num_parked ]" | wc -c)
-domstring=$(echo -e "[ \033[37m$(hostname) \033[1;34m]─[ \033[37mm: \033[32m$main_domain \033[1;34m]─[ \033[37ma: $num_addon \033[1;34m]─[ \033[37ms: $num_subdomains \033[1;34m]─[ \033[37mp: $num_parked \033[1;34m]")
+domstring="[ \[\033[37m\]$(hostname) \[\033[1;34m\]]─[ \[\033[37m\]m: \[\033[32m\]$main_domain \[\033[1;34m\]]─[ \[\033[37m\]a: $num_addon \[\033[1;34m\]]─[ \[\033[37m\]s: $num_subdomains \[\033[1;34m\]]─[ \[\033[37m\]p: $num_parked \[\033[01;34m\]]"
 
 # declate sizes for top bar
-function verbose_prompt() {
-    columns=$(expr "$(tput cols)" - "$charct" - 9)
-    bar=$(
-        echo -n
-        echo -en "\r\033[1;34m┌"
-        for i in $(seq 1 $columns); do echo -en "─"; done
-    )
-    echo -e "${bar}${domstring}"
-}
+corner='┌'
+columns=$(expr "$(tput cols)" - "$charct" - 9)
+topbar=$( for i in $(seq 1 $columns); do echo -en "─"; done )
+fullbar="$corner$topbar$domstring"
 
+IP=$(curl -s ifconfig.me)
 # prompt command
-PROMPT_COMMAND='verbose_prompt'
+#PROMPT_COMMAND=''
 # print PS1
-prompt=$(echo -e '\033[1;34m[ \033[34m\u \033[37m'"$(curl -s ifconfig.me)"' \033[1;34m] [ \033[36mjobs: \033[32m\j \033[1;34m] [ \033[32m\w/\033[1;34m\] ]')
-
-PS1="${prompt} \e[0m\]:> "
+PS1="$domstring\[\033[01;34m\][ \[\033[34m\]\u \[\033[37m\]$IP\[\033[01;34m\]] [ \[\033[36m\]jobs: \[\033[32m\]\j \[\033[01;34m\]] [ \[\033[32m\]\w/\[\033[01;34m\] ] \[\033[00m\]:> "
