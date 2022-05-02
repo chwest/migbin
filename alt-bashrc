@@ -22,7 +22,7 @@ domstring="\[\033[00m\][ \[\033[37m\]$(hostname) \[\033[00m\]]─[ \[\033[37m\]m
 # declate sizes for top bar
 corner='┌'
 IP=$(curl -s ifconfig.me)
-barcolumns=$(expr "$(tput cols)" - "$charct" - 1)
+barcolumns=$(expr "$(tput cols)" - "$charct" - 10)
 topbar=$( for i in $(seq 1 $barcolumns); do echo -en "─"; done );
 fullbar="$corner$topbar"
 # prompt command
